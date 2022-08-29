@@ -1,0 +1,52 @@
+AgeMidpoint,DatasetAuthor,DatasetCountry,IFR,Lower CI,Upper CI
+7,Perez-Saez,Switzerland,0.0016,0.0001,0.019
+15,Perez-Saez,Switzerland,0.00032,0.0001,0.0033
+32,Perez-Saez,Switzerland,0.0092,0.0042,0.016
+57,Perez-Saez,Switzerland,0.14,0.096,0.19
+75,Perez-Saez,Switzerland,5.6,4.3,7.4
+30,Ward,UK,0.03,0.03,0.04
+55,Ward,UK,0.52,0.49,0.55
+72,Ward,UK,3.13,2.65,3.61
+80,Ward,UK,11.64,9.22,14.06
+20,Marra,Brazil,0.032,0.023,0.041
+40,Marra,Brazil,0.22,0.18,0.27
+60,Marra,Brazil,1.2,1,1.5
+80,Marra,Brazil,3,2.4,3.9
+5,Torres-Ibarra,Mexico,0.0001,0.0001,0.004875843
+15,Torres-Ibarra,Mexico,0.0001,0.0001,0.0001
+25,Torres-Ibarra,Mexico,0.014875843,0.014875843,0.02
+35,Torres-Ibarra,Mexico,0.093882583,0.07900674,0.11851011
+45,Torres-Ibarra,Mexico,0.203137638,0.17851011,0.247765166
+55,Torres-Ibarra,Mexico,0.737923024,0.614288757,0.91568819
+65,Torres-Ibarra,Mexico,1.442708411,1.165439875,1.88286627
+75,Torres-Ibarra,Mexico,2.464288757,1.800902804,3.915936505
+85,Torres-Ibarra,Mexico,3.720248315,2.258013481,10.19476409
+30,Public Health Agency of Sweden,Sweden,0.01,0.0001,0.02
+55,Public Health Agency of Sweden,Sweden,0.27,0.15,0.5
+65,Public Health Agency of Sweden,Sweden,0.45,0.25,0.88
+75,Public Health Agency of Sweden,Sweden,1.92,1.16,3.4
+85,Public Health Agency of Sweden,Sweden,7.2,4.54,12.84
+95,Public Health Agency of Sweden,Sweden,16.21,10.11,29.5
+45,Molenberghs,Belgium,0.05,0.01,0.13
+55,Molenberghs,Belgium,0.14,0.07,0.26
+65,Molenberghs,Belgium,0.68,0.56,1.11
+75,Molenberghs,Belgium,2.09,1.44,3.11
+85,Molenberghs,Belgium,2.75,2.07,3.69
+95,Molenberghs,Belgium,10.18,7.01,15.9
+2,O'Driscoll,Global,0.003,0.002,0.003
+7,O'Driscoll,Global,0.001,0.0001,0.001
+12,O'Driscoll,Global,0.001,0.001,0.001
+17,O'Driscoll,Global,0.003,0.002,0.003
+22,O'Driscoll,Global,0.006,0.005,0.008
+27,O'Driscoll,Global,0.013,0.011,0.015
+32,O'Driscoll,Global,0.024,0.021,0.028
+37,O'Driscoll,Global,0.04,0.034,0.047
+42,O'Driscoll,Global,0.075,0.064,0.087
+47,O'Driscoll,Global,0.121,0.104,0.14
+52,O'Driscoll,Global,0.207,0.177,0.239
+57,O'Driscoll,Global,0.323,0.277,0.373
+62,O'Driscoll,Global,0.456,0.392,0.527
+67,O'Driscoll,Global,1.075,0.921,1.244
+72,O'Driscoll,Global,1.674,1.435,1.937
+77,O'Driscoll,Global,3.203,2.744,3.705
+85,O'Driscoll,Global,8.292,7.105,9.593
