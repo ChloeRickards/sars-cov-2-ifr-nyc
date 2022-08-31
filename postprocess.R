@@ -48,7 +48,7 @@ IFR_stats <-
   select(case_cumul, death_cumul) %>% 
   slice(1) %>% ungroup() %>% 
   cbind(total=unique(sero_draws$pop)) %>%
-# Seroprevalence estimates
+  # Seroprevalence estimates
   inner_join(sero_draws %>% 
                group_by(age_class) %>% 
                summarise(sero.mean = mean(seropos),
@@ -77,9 +77,9 @@ IFR_stats <-
   ungroup() %>% 
   mutate(ifr = paste0(mean, " (", q025, "-", q975, ")"),
          sero = paste0(format(signif(100*sero.mean,3), big.mark = ","),
-                          " (", format(signif(100*sero.025,3), big.mark = ","), 
-                          "-", 
-                          format(signif(100*sero.975,3), big.mark = ","), ")"),
+                       " (", format(signif(100*sero.025,3), big.mark = ","), 
+                       "-", 
+                       format(signif(100*sero.975,3), big.mark = ","), ")"),
          infected = paste0(format(signif(infected.mean,3), big.mark = ","),
                            " (", format(signif(infected.025,3), big.mark = ","), 
                            "-", 
@@ -111,7 +111,7 @@ write.csv(IFR_table, file = paste0("./results/IFRs_table_", suffix, ".csv"))
 # Formatting daily case data
 daily_cases <- read_csv("./data/NYCHealth_daily_data.csv") %>%
   filter(var == "case_daily") %>%
-  mutate(var = "Daily Cases (7-day Average)") %>%
+  mutate(var = "Daily cases (7-day average)") %>%
   rename(DailyCount = Total)
 
 avg_cases = rollmean(daily_cases$DailyCount, 7)
@@ -123,12 +123,12 @@ daily_cases <- daily_cases %>%
 if(death_type == "Confirmed"){
   daily_deaths <- read_csv("./data/NYCHealth_daily_data.csv") %>%
     filter(var == "death_daily_conf") %>%
-    mutate(var = "Daily Deaths") %>%
+    mutate(var = "Daily deaths") %>%
     rename(DailyCount = Total)
 } else{
   daily_deaths <- read_csv("./data/NYCHealth_daily_data.csv") %>%
     filter(var == "death_daily_comb") %>%
-    mutate(var = "Daily Deaths") %>%
+    mutate(var = "Daily deaths") %>%
     rename(DailyCount = Total)
 }
 
@@ -146,7 +146,7 @@ daily_infections <- rollmean(daily_infections[daily_infections > 0],7)/10
 daily_infections <- data.frame(DailyCount = daily_infections,
                                date = head(epidata$date,
                                            length(daily_infections)),
-                               var = "Daily Infections/10 (Inferred, 7-day Average)")
+                               var = "Inferred daily infections/10 (7-day average)")
 daily_infections <- daily_infections[daily_infections$date <= serosurvey_midpoint,]
 
 
@@ -156,17 +156,17 @@ timeline <- daily_deaths %>%
   rbind(daily_infections) %>%
   rbind(data.frame(DailyCount=c(0,7500),
                    date=serosurvey_midpoint,
-                   var = "Serosurvey Midpoint"))%>%
+                   var = "Serosurvey midpoint"))%>%
   rename(Legend = var)
 
 # Plot
 ggplot(timeline, aes(x=date,y = DailyCount)) +
   geom_rect(aes(xmin=as.Date("2020-04-19"),
-           xmax=as.Date("2020-04-28"),
-           ymin=0,
-           ymax=7500,
-           fill="Serosurvey"),
-           alpha=0.5)+
+                xmax=as.Date("2020-04-28"),
+                ymin=0,
+                ymax=7500,
+                fill="Serosurvey"),
+            alpha=0.5)+
   scale_fill_manual('',
                     values = 'grey',
                     guide = guide_legend(override.aes = list(alpha = 1)))+
@@ -179,12 +179,13 @@ ggplot(timeline, aes(x=date,y = DailyCount)) +
         legend.title=element_blank())+
   scale_size_manual(values = c(1, 1, 1, 1, 3))+
   scale_color_manual(values=c("#61ddff", "#2051e3", "#de2509", "black"))+
-  scale_y_continuous(breaks=seq(0,8000,1000))+
-  #scale_y_continuous(breaks=seq(0,6000,1000))+
+  scale_y_continuous(breaks = seq(0,8000,1000),labels=c("0","1,000","2,000",
+                                                        "3,000","4,000","5,000",
+                                                        "6,000","7,000","8,000"))+
   xlab("Date")+
-  ylab("COVID-19 Cases and Deaths\n")
+  ylab("COVID-19 cases and deaths\n")
 
-ggsave("./results/nyc_timeline.png", width = 15, height = 12)
+ggsave("./results/nyc_timeline.png", width = 13.5, height = 10.3)
 
 
 # IFR Comparison ---------------------------------------------------------------
@@ -208,15 +209,15 @@ NYC_compare <- data.frame(AgeMidpoint = c(9, 32, 55, 70, 85),
                                   IFR_stats$mean[IFR_stats$age_class == "65-74"],
                                   IFR_stats$mean[IFR_stats$age_class == "75+"]),
                           LowerCI = c(IFR_stats$q025[IFR_stats$age_class == "0-17"],
-                                       IFR_stats$q025[IFR_stats$age_class == "18-44"],
-                                       IFR_stats$q025[IFR_stats$age_class == "45-64"],
-                                       IFR_stats$q025[IFR_stats$age_class == "65-74"],
-                                       IFR_stats$q025[IFR_stats$age_class == "75+"]),
+                                      IFR_stats$q025[IFR_stats$age_class == "18-44"],
+                                      IFR_stats$q025[IFR_stats$age_class == "45-64"],
+                                      IFR_stats$q025[IFR_stats$age_class == "65-74"],
+                                      IFR_stats$q025[IFR_stats$age_class == "75+"]),
                           UpperCI = c(IFR_stats$q975[IFR_stats$age_class == "0-17"],
-                                       IFR_stats$q975[IFR_stats$age_class == "18-44"],
-                                       IFR_stats$q975[IFR_stats$age_class == "45-64"],
-                                       IFR_stats$q975[IFR_stats$age_class == "65-74"],
-                                       IFR_stats$q975[IFR_stats$age_class == "75+"]))
+                                      IFR_stats$q975[IFR_stats$age_class == "18-44"],
+                                      IFR_stats$q975[IFR_stats$age_class == "45-64"],
+                                      IFR_stats$q975[IFR_stats$age_class == "65-74"],
+                                      IFR_stats$q975[IFR_stats$age_class == "75+"]))
 
 # Stitching all the IFRs together to compare
 IFR_comparison <- rbind(IFR_comparison, NYC_compare) %>%
@@ -247,17 +248,19 @@ ggplot(IFR_comparison, aes(y=IFR, x=AgeMidpoint,col=Region)) +
                               "#d97b09", "#cc0000","#0c09d9",
                               "#ad05f5", "#f542e3"))+
   xlab("Age")+
-  ylab("IFR (log scale)")
+  ylab("Infection fatality rate (log scale)")
 
-ggsave("./results/ifr_comparison.png", width = 15, height = 15)
+ggsave("./results/ifr_comparison.png", width = 10, height = 10)
 
 # Plot on linear scale
+IFR_comparison$UpperCI[IFR_comparison$Region == "Sweden" & IFR_comparison$AgeMidpoint > 88] = 20
 ggplot(IFR_comparison, aes(y=IFR, x=AgeMidpoint,col=Region)) +
   geom_line(aes(group = Region),position=position_dodge(width=2))+
   theme_bw()+
   geom_point(aes(shape=Region),size=4,position=position_dodge(width=2))+
   geom_errorbar(aes(ymin = LowerCI, ymax = UpperCI),
                 width = 0.25,position=position_dodge(width=2))+
+  scale_y_continuous(breaks = c(0,5,10,15,20),labels=c("0%","5%","10%","15%","20%"), limits=c(0,20))+
   theme(axis.title=element_text(size=25),legend.position = c(.2, .80),
         axis.text=element_text(size=25),legend.text=element_text(size=15),
         legend.title=element_text(size=15),
@@ -269,10 +272,9 @@ ggplot(IFR_comparison, aes(y=IFR, x=AgeMidpoint,col=Region)) +
                               "#d97b09", "#cc0000","#0c09d9",
                               "#ad05f5", "#f542e3"))+
   xlab("Age")+
-  ylab("IFR (percent)")+
-  ylim(0,20)
+  ylab("Infection fatality rate")
 
-ggsave("./results/ifr_comparison_untransformed.png", width = 15, height = 15)
+ggsave("./results/ifr_comparison_untransformed.png", width = 10, height = 10)
 
 
 
@@ -404,16 +406,17 @@ plot(p_comb)
 
 # Delays of interest: here we are measuring infection delays
 delay_list <- c("i2s", #infection to symptom
-             "i2c",  #infection to case report
-             "i2sero", #infection to seroconversion
-             "i2d")  #infection to death
+                "i2c",  #infection to case report
+                "i2sero", #infection to seroconversion
+                "i2d")  #infection to death
 delay_names <- c("Incubation period \n (Infection to symptom onset)",
-              "Infection to case reporting",
-              "Infection to seroconversion",
-              "Infection to death")
+                 "Infection to case reporting",
+                 "Infection to seroconversion",
+                 "Infection to death")
 
 # Going from PDFs to days distribution
 n <- 10000
+violin_data <- data.frame()
 for (i in 1:length(unique(delays_2plot$days))){
   for (j in 1:length(delay_list)){
     if (round(delays_2plot$mean[delays_2plot$var == delay_list[j]][i]*n) > 0){
@@ -442,10 +445,10 @@ ggplot(violin_data, aes(x=delay, y=days, fill=delay)) +
   theme_bw()+
   theme(axis.title=element_text(size=20), axis.text=element_text(size=17),
         legend.position = "none")+
-  xlab("Delay Distribution")+
+  xlab("Delay distribution")+
   ylab("Days")
 
-ggsave("./results/delay_violins.png", width = 15, height = 10)
+ggsave("./results/delay_violins.png", width = 12, height = 8)
 
 
 # Gini and Income vs. IFR plots ------------------------------------------------
@@ -466,9 +469,9 @@ country_IFRs <- IFR_comparison %>%
 
 # Categorize IFR estimates into age category bins based on age_classes
 agec=c(0,18,45,65,75) #age mins
-for (i in 1:nrow(IFR)) {
+for (i in 1:nrow(country_IFRs)) {
   country_IFRs$bin[i] = age_classes[max(which(country_IFRs$AgeMidpoint[i]>agec))]
-  }
+}
 
 # Merge with Gini and income data
 country_IFRs_wealth <- aggregate(IFR ~ bin+Country, data=country_IFRs, FUN=mean) %>%
@@ -476,8 +479,8 @@ country_IFRs_wealth <- aggregate(IFR ~ bin+Country, data=country_IFRs, FUN=mean)
 
 # Create objects for storing income, Gini, and combined
 income <- seq(min(country_IFRs_wealth$medianIncome),
-                     max(country_IFRs_wealth$medianIncome),
-                     by=50)
+              max(country_IFRs_wealth$medianIncome),
+              by=50)
 Gini <- seq(min(country_IFRs_wealth$Gini),
             max(country_IFRs_wealth$Gini),
             length.out=length(income))
@@ -525,25 +528,37 @@ country_IFRs_wealth <- filter(country_IFRs_wealth, bin != "0-17" )
 wealth_data <- filter(wealth_data, bin != "0-17")
 
 # Income plot
-ggplot(country_IFRs_wealth,aes(y=IFR,x=medianIncome,label=Country))+geom_point()+
-  facet_wrap(vars(bin),nrow=2,scales="free_y")+theme_few()+
-  geom_line(data=wealth_data[wealth_data$pval_inc<0.05,],aes(x=medianIncome,y=IFR_inc))+
+ggplot(country_IFRs_wealth, aes(y=IFR, x=medianIncome, label=Country))+
+  geom_point()+
+  facet_wrap(vars(bin), nrow=2, scales="free_y")+
+  theme_few()+
+  geom_line(data=wealth_data[wealth_data$pval_inc<0.05,], aes(x=medianIncome,y=IFR_inc))+
   geom_ribbon(data=wealth_data[wealth_data$pval_inc<0.05,],
               aes(x=medianIncome,y=IFR_inc,ymin=IFR_inc-IFRse_inc,ymax=IFR_inc+IFRse_inc),
-              alpha=0.2,fill="grey",linetype=0)+
-  geom_text_repel(size=4)+theme(legend.position = "none")+
-  theme(axis.title=element_text(size=25),axis.text=element_text(size=25),
+              alpha=0.5,fill="grey",linetype=0)+
+  geom_text_repel(size=4)+
+  theme(legend.position = "none")+
+  theme(axis.title=element_text(size=25), axis.text=element_text(size=25),
         strip.text.x = element_text(size = 15))+
-  xlab("Median Income ($)")+ ylab("Infection Fatality Rate")
+  scale_y_continuous(labels=scales::percent)+
+  scale_x_continuous(breaks=seq(5000,20000,5000),labels=c("5,000","10,000","15,000","20,000"))+
+  xlab("Median income ($)")+ 
+  ylab("Infection fatality rate")
 
 # Gini index plot
-ggplot(country_IFRs_wealth,aes(y=IFR,x=Gini,label=Country))+geom_point()+
-  facet_wrap(vars(bin),nrow=2,scales="free_y")+theme_few()+
-  geom_line(data=wealth_data[wealth_data$pval_gin<0.05,],aes(x=Gini,y=IFR_gin))+
-  geom_ribbon(data=wealth_data[wealth_data$pval_gin<0.05,],
+# need to add a b c d to these
+# need to decapitalize the labels on the other graphs
+ggplot(country_IFRs_wealth,aes(y=IFR, x=Gini, label=Country))+
+  geom_point()+
+  facet_wrap(vars(bin), nrow=2, scales="free_y")+
+  theme_few()+
+  geom_line(data=wealth_data[wealth_data$pval_gin<0.05, ], aes(x=Gini, y=IFR_gin))+
+  geom_ribbon(data=wealth_data[wealth_data$pval_gin<0.05, ],
               aes(x=Gini,y=IFR_gin,ymin=IFR_gin-IFRse_gin,ymax=IFR_gin+IFRse_gin),
-              alpha=0.2,fill="grey",linetype=0)+
+              alpha=0.5,fill="grey",linetype=0)+
   geom_text_repel(size=4)+
-  theme(axis.title=element_text(size=25),axis.text=element_text(size=25),
+  theme(axis.title=element_text(size=20), axis.text=element_text(size=20),
         strip.text.x = element_text(size = 15))+
-  xlab("Gini Index")+ ylab("Infection Fatality Rate (%)")
+  scale_y_continuous(labels=scales::percent)+
+  xlab("Gini index")+ 
+  ylab("Infection fatality rate")
